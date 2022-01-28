@@ -77,35 +77,44 @@ class _RegisterViewState extends State<RegisterView> {
                       autocorrect: false,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextButton(
-                      onPressed: () async {
-                        final email = _email.text;
-                        final password = _password.text;
-                        try {
-                          final userCredential = await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                            email: email,
-                            password: password,
-                          );
-                          print(userCredential);
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'email-already-in-use') {
-                            print('email in use');
-                          } else if (e.code == 'weak-password') {
-                            print('weak passwd');
-                          } else if (e.code == 'invalid-email') {
-                            print('Invalid email');
-                          }
+                  TextButton(
+                    onPressed: () async {
+                      final email = _email.text;
+                      final password = _password.text;
+                      try {
+                        final userCredential = await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+                        print(userCredential);
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'email-already-in-use') {
+                          print('email in use');
+                        } else if (e.code == 'weak-password') {
+                          print('weak passwd');
+                        } else if (e.code == 'invalid-email') {
+                          print('Invalid email');
                         }
-                      },
-                      child: const Text(
-                        'Regester',
-                        textScaleFactor: 2.0,
-                      ),
+                      }
+                    },
+                    child: const Text(
+                      'Regester',
+                      textScaleFactor: 2.0,
                     ),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/login/',
+                        (route) => false,
+                      );
+                    },
+                    child: const Text(
+                      'Already Registered! Login',
+                      textScaleFactor: 1.6,
+                    ),
+                  )
                 ],
               );
             default:

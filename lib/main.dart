@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/login_view.dart';
+import 'package:mynotes/views/verify_email_view.dart';
 
 import 'firebase_options.dart';
 
@@ -37,73 +38,30 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Home',
-        ),
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
       ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: ((context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              final user = FirebaseAuth.instance.currentUser;
-              if (user?.emailVerified ?? false) {
-                return const Center(
-                  child: Text(
-                    'Done',
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
-                    textScaleFactor: 3.0,
-                  ),
-                );
+      builder: ((context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              if (user.emailVerified) {
+                print('Email Verified');
               } else {
                 return const VerifyEmailView();
               }
-
-            default:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-          }
-        }),
-      ),
-    );
-  }
-}
-
-class VerifyEmailView extends StatelessWidget {
-  const VerifyEmailView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'Please verify your email address!!!',
-          style: TextStyle(
-            color: Colors.blue,
-          ),
-          textScaleFactor: 1.5,
-        ),
-        const SizedBox(
-          height: 50,
-        ),
-        TextButton(
-          onPressed: (() async {
-            final user = FirebaseAuth.instance.currentUser;
-            await user?.sendEmailVerification();
-          }),
-          child: const Text(
-            'Verify',
-          ),
-        )
-      ],
+            } else {
+              return const LoginView();
+            }
+            return const Text('Done');
+          default:
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+        }
+      }),
     );
   }
 }
