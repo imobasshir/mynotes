@@ -77,32 +77,42 @@ class _LoginViewState extends State<LoginView> {
                       autocorrect: false,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextButton(
-                      onPressed: () async {
-                        final email = _email.text;
-                        final password = _password.text;
-                        try {
-                          final userCredential = await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                            email: email,
-                            password: password,
-                          );
-                          print(userCredential);
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'user-not-found') {
-                            print('User Not Found');
-                          } else if (e.code == 'wrong-password') {
-                            print('Wrong Pswd');
-                          }
+                  TextButton(
+                    onPressed: () async {
+                      final email = _email.text;
+                      final password = _password.text;
+                      try {
+                        final userCredential = await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+                        print(userCredential);
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          print('User Not Found');
+                        } else if (e.code == 'wrong-password') {
+                          print('Wrong Pswd');
                         }
-                      },
-                      child: const Text(
-                        'Login',
-                      ),
+                      }
+                    },
+                    child: const Text(
+                      'Login',
+                      textScaleFactor: 2.0,
                     ),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/register/',
+                        (route) => false,
+                      );
+                    },
+                    child: const Text(
+                      'Not Registered Yet Do Registration',
+                      textScaleFactor: 1.6,
+                    ),
+                  )
                 ],
               );
             default:

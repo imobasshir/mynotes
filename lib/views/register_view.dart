@@ -4,14 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../firebase_options.dart';
 
 class RegisterView extends StatefulWidget {
-  const RegisterView({ Key? key }) : super(key: key);
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
   _RegisterViewState createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends State<RegisterView> {
-
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -86,11 +85,11 @@ class _RegisterViewState extends State<RegisterView> {
                         final password = _password.text;
                         try {
                           final userCredential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-                        print(userCredential);
+                              .createUserWithEmailAndPassword(
+                            email: email,
+                            password: password,
+                          );
+                          print(userCredential);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'email-already-in-use') {
                             print('email in use');
@@ -103,6 +102,7 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                       child: const Text(
                         'Regester',
+                        textScaleFactor: 2.0,
                       ),
                     ),
                   ),
